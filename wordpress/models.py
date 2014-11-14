@@ -9,7 +9,7 @@ class Wordpress(models.Model):
 	parent = models.CharField(max_length=150, null=True)
 	title = models.CharField(max_length=100)
 	subtitle = models.CharField(max_length=100, blank=True)
-	content = models.CharField(max_length=1024, blank=True)
+	content = models.CharField(max_length=5000, blank=True)
 	
 	def __repr__(self):
 		return self.title
