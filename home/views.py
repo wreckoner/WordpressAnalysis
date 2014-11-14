@@ -11,4 +11,5 @@ def home(requests):
 	'message' : 'Click on one of the links below to go to the respective project page.',
 	'links' : [{'name': 'Tufts Wordpress Analysis (WPA) Project', 'url': '/wordpress/'}]
 	}
-	return render(requests, template, context)
+	#return render(requests, template, context)
+	return HttpResponse("Hello World")
