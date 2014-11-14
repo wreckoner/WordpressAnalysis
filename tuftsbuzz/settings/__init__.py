@@ -2,7 +2,7 @@ from .base import *
 
 try:
 	from .local import *
-	live = Frue
+	live = False
 except:
 	live = True
 
