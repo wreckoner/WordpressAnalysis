@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<header>
+	<h2>{{ header }}</h2>
+</header>
+{% endblock %}
+
+{% block content %}
+	<p>Url : <a href="{{db_object.url}}" target="_blank">{{db_object.url}}</a></p>
+	{% if db_object.level == "site" %}
+		<p>Last Scraped : {{db_object.published}}</p>
+	{% else %}
+		<p>Published : {{db_object.published}}</p>
+	{% endif %}
+	{% if db_object.level == "site" %}
+		<table>
+			<tr><th>Post</th><th>Analysis</th><th>Published</th><th>Url</th></tr>
+			{% for item in sub_pages %}
+				<tr>
+					<td>{{item.title}}</td>
+					<td><a href="/wordpress/stats?url={{item.url}}&level={{item.level}}">Results</a></td>
+					<td>{{item.published}}</td>
+					<td><a href="{{item.url}}" target="_blank">Link</a></td>
+				</tr>
+			{% endfor %}
+		</table>
+	{% else %}
+		<table>
+			<tr><th>Word</th><th>Frequency</th></tr>
+			{% for item in word_count.items %}
+				<tr><td>{{item.0}}</td><td>{{item.1}}</td></tr>
+			{% endfor %}
+		</table>
+		<h3>Text : </h3>
+		<p>{{db_object.content}}</p>
+	{% endif %}
+
+{% endblock %}
