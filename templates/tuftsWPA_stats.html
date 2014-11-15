@@ -28,8 +28,8 @@
 	{% else %}
 		<table>
 			<tr><th>Word</th><th>Frequency</th></tr>
-			{% for item in word_count.items %}
-				<tr><td>{{item.0}}</td><td>{{item.1}}</td></tr>
+			{% for word, count in word_count %}
+				<tr><td>{{word}}</td><td>{{count}}</td></tr>
 			{% endfor %}
 		</table>
 		<h3>Text : </h3>

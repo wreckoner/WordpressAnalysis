@@ -33,6 +33,8 @@ def stats(requests):
 	else:
 		header = ''.join(['Statistics of the page - ', page_label])
 		word_count = Analysis(db_object.content).word_counter()
+		word_count = [(k.capitalize(), word_count[k]) for k in word_count]
+		word_count.sort(key=lambda x:x[1], reverse=True)
 	context = {
 	'title' : 'Tufts Wordpress Analysis',
 	'header' : header,

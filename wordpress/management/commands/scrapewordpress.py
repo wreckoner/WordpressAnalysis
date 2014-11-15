@@ -21,12 +21,15 @@ class Command(BaseCommand):
 			self.stdout.write('\nScraping %s' %site)
 			try:
 				site_obj = self.scrape(site, 'site')
-				#self.stdout.write('\n%s. %s.\n' %(site_obj['title'], site_obj['subtitle']))
-				self.save(site_obj, 'site')
-				for item in site_obj['entries']:
-					self.save(item, 'page')
+				if site_obj:
+					self.save(site_obj, 'site')
+					for item in site_obj['entries']:
+						try:
+							self.save(item, 'page')
+						except Exception as e:
+							self.stdout.write("Error trying to save page: %s" %str(e))
 			except Exception as e:
-				self.stdout.write(str(e))
+				self.stdout.write("Error trying to save site: %s" %str(e))
 		stop = datetime.datetime.now()
 		self.stdout.write("Total time taken to update : %s" %(stop-start))
 
@@ -118,15 +121,18 @@ class Crawl_Site():
 	        if (timezone.now() - published).days > self.age * 30:
 	        	print 'Page at %s is older than %s months. Discarding' %(entry.link, self.age)
 	        else:
-	        	print published, entry.link
-	        	site_entry['url'] = entry.link
-	        	site_entry['parent'] = self.url
-	        	site_entry['published'] = published
-		        site_entry['title'] = entry.title.encode('ascii', 'ignore')
-		        site_entry['content'] = self.clean_text(entry.content[0]['value'].encode('ascii', 'ignore'))
-		        site_data['word_count'] = None
-		        site_data['top_words'] = None
-		        site_data['entries'].append(site_entry)
+	        	try:
+	        		print published, entry.link
+		        	site_entry['url'] = entry.link
+		        	site_entry['parent'] = self.url
+		        	site_entry['published'] = published
+			        site_entry['title'] = entry.title.encode('ascii', 'ignore')
+			        site_entry['content'] = self.clean_text(entry.content[0]['value'].encode('ascii', 'ignore'))
+			        site_data['word_count'] = None
+			        site_data['top_words'] = None
+			        site_data['entries'].append(site_entry)
+	        	except Exception, e:
+			    	print "Error parsing %s : %s" %(entry.link, str(e))
 		if len(site_data['entries']) == 0:					# If all the posts are older than the age, returns false
 			site_data = False
 	    return site_data
