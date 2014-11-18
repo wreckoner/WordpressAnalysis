@@ -4,20 +4,26 @@
 	<title>{{title}}</title>
 </head>
 <body>
-	<div>
+	<div id = "header">
 		{% block header %}
 		{% endblock %}
 	</div>
 	<hr>
-	<div>
+	<div id="visuals">
+		{% block visuals %}
+		{% endblock %}
+	</div>
+	<div id="content">
 		{% block content %}
 		{% endblock %}
 	</div>
 	<hr>
-	<div>
+	<div id="footer">
 		<footer>
-			A Tufts AT Fellows Project. Created and Maintained by Dibyendu Das.
+			Created and Maintained by Dibyendu Das.
 		</footer>
 	</div>
+	{% block staticfiles %}
+	{% endblock %}
 </body>
 <html>

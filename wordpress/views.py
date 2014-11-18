@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from models import Wordpress
 from common.analyzer import Analysis
+from django.core.serializers.json import DjangoJSONEncoder
+import json
 
 # Create your views here.
 
@@ -27,14 +29,16 @@ def stats(requests):
 	page_label = '. '.join([db_object.title, db_object.subtitle])
 	sub_pages = None
 	word_count = None
+	word_count_json = None
 	if level == 'site':
 		header = ''.join(['Statistics of the site - ', page_label])
 		sub_pages = Wordpress.objects.filter(parent=url)
 	else:
 		header = ''.join(['Statistics of the page - ', page_label])
 		word_count = Analysis(db_object.content).word_counter()
-		word_count = [(k.capitalize(), word_count[k]) for k in word_count]
+		word_count = [[k.capitalize().encode('ascii', 'ignore'), word_count[k]] for k in word_count]
 		word_count.sort(key=lambda x:x[1], reverse=True)
+		word_count_json = json.dumps(word_count, cls=DjangoJSONEncoder)
 	context = {
 	'title' : 'Tufts Wordpress Analysis',
 	'header' : header,
@@ -42,5 +46,6 @@ def stats(requests):
 	'db_object' : db_object,
 	'sub_pages' : sub_pages,
 	'word_count' : word_count,
+	'word_count_json' : word_count_json,
 	}
 	return render(requests, template, context)

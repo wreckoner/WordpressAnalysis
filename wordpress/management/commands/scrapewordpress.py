@@ -127,7 +127,7 @@ class Crawl_Site():
 		        	site_entry['parent'] = self.url
 		        	site_entry['published'] = published
 			        site_entry['title'] = entry.title.encode('ascii', 'ignore')
-			        site_entry['content'] = self.clean_text(entry.content[0]['value'].encode('ascii', 'ignore'))
+			        site_entry['content'] = self.clean_text(entry.content[0]['value'])
 			        site_data['word_count'] = None
 			        site_data['top_words'] = None
 			        site_data['entries'].append(site_entry)
@@ -137,22 +137,10 @@ class Crawl_Site():
 			site_data = False
 	    return site_data
 
-	def mine_html(self, url):
-	    ''' Parses an html and aggregates all the important text from the html. Not being used now. Will remove it if not needed any more.'''
-	    html = requests.get(url)
-	    soup = BeautifulSoup(html.content)
-	    paras = soup.body.find_all('p')
-	    para_texts = []
-	    for p in paras:
-	        text = self.clean_text(p.text)
-	        if len(text) > 150:
-	            para_texts.append(text)
-	    text = ' '.join(para_texts)
-	    return text
-
 	def clean_text(self, text):
-		table = {'&#8211;' : '-', '&#8212;' : '-', '&#8216;' : "'", '&#8217;' : "'", '&#8220;' : '"', '&#8221;' : '"', '&nbsp;' : ' ', '&#8230;' : '...'}
+		table = {'&#8211;' : '-', '&#8212;' : '-', '&#8216;' : "'", '&#8217;' : "'", '&#8220;' : '"', '&#8221;' : '"', '&nbsp;' : ' ', '&#8230;' : '...', "&amp;" : '&'}
 		for pair in table:
 			text = text.replace(pair, table[pair])
 		text = re.sub(r'<.*?>|</.*?>', ' ', text)
-		return text.encode('ascii', 'ignore')
+		#return text.encode('ascii', 'ignore')
+		return text
