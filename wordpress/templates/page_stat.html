@@ -1,0 +1,42 @@
+{% extends 'app_base.html' %}
+
+{% block staticfiles %}
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href= {% static "page_stat.css" %}>
+<script type="text/javascript" src="{% static "page_stat.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+	<table>
+		<tr><td>Website</td><td><a href="{{db_object.parent}}" target="_blank">{{db_object.parent}}</a></td></tr>
+		<tr><td>Page</td><td>{{db_object.title}}</td></tr>
+		<tr><td>Url</td><td><a href="{{db_object.url}}" target="_blank">{{db_object.url}}</a></td></tr>
+		<tr><td>Published</td><td>{{db_object.published}}</td></tr>
+	</table>
+	<p>
+		<button onclick="text();">Text</button>
+		<button onclick="word_count();">Word Frequency</button>
+		<button>Word Cloud</button>
+	</p>
+	<div id="text">
+	<h3>Text</h3>
+		{{db_object.content}}
+	</div>
+	<div id="word-count">
+		<h3>Word Frequencies</h3>
+		<div id='bars'>
+		{% for count in word_bags %}
+			<button class="bars" onclick="word_bag({{count}});">{{count}}</button><br>
+		{%  endfor %}
+		</div>
+		{% for count, words in word_bags.items %}
+		<div class="bar-words" id="{{count}}">
+			{% for word in words %}
+				{% if forloop.last %}{{word}}.{% else %}{{word}}, {% endif %}
+			{% endfor %}
+			<p>Total Number of words : {{words | length}}.</p>
+		</div>
+		{% endfor %}
+	</div>
+{% endblock %}
+

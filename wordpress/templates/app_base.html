@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{{title}}</title>
+	</head>
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href= {% static "app_base.css" %}>
+	{% block staticfiles %}
+	{% endblock %}
+	<body>
+		<div class = "header">
+			<div id = "content">
+				{{header}}
+			</div>
+			<div id = "links">
+				<button onclick="location.href='../'">Home</button>
+				<button>About</button>
+				<button onclick="location.href='http://www.tufts.edu/'">Tufts</button>
+			</div>
+		</div>
+			<div id="inner">
+				<div id="visuals">
+					{% block visuals %}
+					{% endblock %}
+				</div>
+				<div id="content">
+					{% block content %}
+					{% endblock %}
+				</div>
+			</div>
+		<div class="footer">
+			A Tufts University Academic Technology Fellow Project. Copyleft {{footer}} Dibyendu Das.
+		</div>
+	</body>
+</html>

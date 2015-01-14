@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<header>
+	<table border="0" bordercolor="#ccc" cellpadding="5" cellspacing="0" style="border-style:hidden;float:right">
+		<tbody>
+			<tr>
+				<td><a href="/wordpress"><h3>Home</h3></a></td>
+				<td><h3>{% now 'h:i A' %}</h3></td>
+			</tr>
+		</tbody>
+	</table>
 	<h2>{{ header }}</h2>
-</header>
 {% endblock %}
 
 {% block visuals %}
@@ -13,11 +19,10 @@
 		<script src={% static "d3.layout.cloud.js" %}></script>
 		<script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
 		<script src={% static "custom.js" %}></script>
-		<link rel="stylesheet" type="text/css" href= {% static "main.css" %}>
 		<script>
 
 			var width = $("body").width();
-			var height = 1400;//$(window).height() * 1.5;
+			var height = width;//$(window).height() * 1.5;
 			var fill = d3.scale.category20();
 			var temp = {{word_count_json|safe}}.slice(0, 150);
 
@@ -94,6 +99,10 @@
 		<p>{{db_object.content}}</p>
 	{% endif %}
 
+{% endblock %}
+
+{% block footer %}
+	A Tufts AT Fellow Project. Copyleft {% now 'Y' %}. Dibyendu Das.
 {% endblock %}
 
 {% block staticfiles %}

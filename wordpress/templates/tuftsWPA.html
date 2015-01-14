@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<header>
+	<table border="0" bordercolor="#ccc" cellpadding="5" cellspacing="0" style="border-style:hidden;float:right">
+		<tbody>
+			<tr>
+				<td><a href="/wordpress"><h3>Home</h3></a></td>
+				<td><h3>{% now 'h:i A' %}</h3></td>
+			</tr>
+		</tbody>
+	</table>
 	<h2>{{ header }}</h2>
-</header>
 {% endblock %}
 
 {% block content %}
@@ -32,3 +38,13 @@
 		</table>
 	</p>
 {% endblock %}
+
+{% block footer %}
+	A Tufts AT Fellow Project. Copyleft {% now 'Y' %}. Dibyendu Das.
+{% endblock %}
+
+{% block staticfiles %}
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href= {% static "main.css" %}>
+{% endblock %}
+

@@ -1,0 +1,90 @@
+<div id = "text_collision">
+	{% load staticfiles %}
+	<!-- // <script type="text/javascript" src={% static "d3.js" %}></script>
+    // <script type="text/javascript" src={% static "d3.geom.js" %}></script>
+    // <script type="text/javascript" src= {% static "d3.layout.js" %}></script> -->
+    <!-- <link type="text/css" rel="stylesheet" href= {% static "style.css" %} /> -->
+    <script type="text/javascript" src="http://mbostock.github.io/d3/talk/20111018/d3/d3.js"></script>
+    <script type="text/javascript" src="http://mbostock.github.io/d3/talk/20111018/d3/d3.geom.js"></script>
+    <script type="text/javascript" src="http://mbostock.github.io/d3/talk/20111018/d3/d3.layout.js"></script>
+	Testing testing!
+	<script type="text/javascript">
+	var data = {{ word_count_json|safe }};
+	var w = parseInt(d3.select("body").style("width")),
+		h = w*0.8;
+		var nodes = d3.range(data.length).map(function(i) { return {radius: data[i][1]*25, word: data[i][0]}; });
+		    color = d3.scale.category10();
+
+		var force = d3.layout.force()
+		    .gravity(0.05)
+		    .charge(function(d, i) { return i ? 0 : -2000; })
+		    .nodes(nodes)
+		    .size([w, h]);
+
+		var root = nodes[0];
+		root.radius = 0;
+		root.fixed = true;
+
+		force.start();
+
+		var svg = d3.select("#body").append("svg:svg")
+		    .attr("width", w)
+		    .attr("height", h);
+
+		svg.selectAll("text")
+		    .data(nodes)
+		  .enter().append("svg:text")
+		    .style("fill", function(d, i) { return color(d.radius); })
+		    .style("font-size", function(d){ return d.radius*0.6; })
+		    .attr("text-anchor", "middle")
+		    .text(function(d){ return d.word; });
+
+		force.on("tick", function(e) {
+		  var q = d3.geom.quadtree(nodes),
+		      i = 0,
+		      n = nodes.length;
+
+		  while (++i < n) {
+		    q.visit(collide(nodes[i]));
+		  }
+
+		  svg.selectAll("text")
+		      .attr("x", function(d) { return d.x; })
+		      .attr("y", function(d) { return d.y; });
+		});
+
+		svg.on("mousemove", function() {
+		  var p1 = d3.svg.mouse(this);
+		  root.px = p1[0];
+		  root.py = p1[1];
+		  force.resume();
+		});
+
+		function collide(node) {
+		  var r = 100,
+		      nx1 = node.x - r,
+		      nx2 = node.x + r,
+		      ny1 = node.y - r,
+		      ny2 = node.y + r;
+		  return function(quad, x1, y1, x2, y2) {
+		    if (quad.point && (quad.point !== node)) {
+		      var x = node.x - quad.point.x,
+		          y = node.y - quad.point.y,
+		          l = Math.sqrt(x * x + y * y),
+		          r = node.radius + quad.point.radius;
+		      if (l < r) {
+		        l = (l - r) / l * .5;
+		        node.x -= x *= l;
+		        node.y -= y *= l;
+		        quad.point.x += x;
+		        quad.point.y += y;
+		      }
+		    }
+		    return x1 > nx2
+		        || x2 < nx1
+		        || y1 > ny2
+		        || y2 < ny1;
+		  };
+		}
+	</script>
+</div>
