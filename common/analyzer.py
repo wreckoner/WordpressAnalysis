@@ -23,6 +23,12 @@ class Analysis():
 	def word_counter(self):
 		words = self.word_list
 		word_counts = {k:0 for k in words}
+		word_bags = {}
 		for word in words:
 			word_counts[word] += 1
-		return word_counts
+		for i in word_counts.values():
+			if i not in word_bags.keys():
+				word_bags[i] = []
+		for word in word_counts:
+			word_bags[word_counts[word]].append(word.capitalize())
+		return word_counts, word_bags

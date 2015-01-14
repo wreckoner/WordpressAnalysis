@@ -1,29 +1,28 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>{{title}}</title>
-</head>
-<body>
-	<div id = "header">
-		{% block header %}
+	<head>
+		<title>{{title}}</title>
+	</head>
+	<body>
+		<div class = "header">
+			{% block header %}
+			{% endblock %}
+		</div>
+			<div id="inner">
+				<div id="visuals">
+					{% block visuals %}
+					{% endblock %}
+				</div>
+				<div id="content">
+					{% block content %}
+					{% endblock %}
+				</div>
+			</div>
+		<div class="footer">
+			{% block footer%}
+			{% endblock %}
+		</div>
+		{% block staticfiles %}
 		{% endblock %}
-	</div>
-	<hr>
-	<div id="visuals">
-		{% block visuals %}
-		{% endblock %}
-	</div>
-	<div id="content">
-		{% block content %}
-		{% endblock %}
-	</div>
-	<hr>
-	<div id="footer">
-		<footer>
-			Created and Maintained by Dibyendu Das.
-		</footer>
-	</div>
-	{% block staticfiles %}
-	{% endblock %}
-</body>
-<html>
+	</body>
+</html>
