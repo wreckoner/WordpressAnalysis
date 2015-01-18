@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-	<h2 id="page-heading">Post statistics</h2>
+	<h2 id="page-heading">{{db_object.title}}. {{db_object.subtitle}}</h2>
 	<table>
 		<tr><td>Website</td><td><a href="{{db_object.parent}}" target="_blank">{{db_object.parent}}</a></td></tr>
 		<tr><td>Page</td><td>{{db_object.title}}</td></tr>
