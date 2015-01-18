@@ -1,0 +1,91 @@
+#page-heading {
+	text-align: center;
+}
+
+#inner table{
+  border-spacing: 5px;
+}
+
+#inner a{
+  color: rgba(201,180,94,0.89);
+}
+
+#site-tree{
+	display: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  height: 400px;
+  padding: 10px;
+  overflow: hidden;
+  border: 3px solid rgba(1,153,217,1);
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  font: normal 16px/1 "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  color: rgba(5,5,5,1);
+  text-align: center;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  /*background: rgb(255,255,255);*/
+  -webkit-box-shadow: 3px 3px 6px -1px rgba(255,255,255,1) ;
+  box-shadow: 3px 3px 6px -1px rgba(255,255,255,1) ;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.2) ;
+}
+
+#pie-chart{
+	display: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  height: 400px;
+  padding: 10px;
+  overflow: hidden;
+  border: 3px solid rgba(1,153,217,1);
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  font: normal 16px/1 "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  color: rgba(5,5,5,1);
+  text-align: center;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  /*background: rgb(255,255,255);*/
+  -webkit-box-shadow: 3px 3px 6px -1px rgba(255,255,255,1) ;
+  box-shadow: 3px 3px 6px -1px rgba(255,255,255,1) ;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.2) ;
+}
+
+#post-container{
+  display: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 20px;
+  overflow: hidden;
+  border: 2px double rgba(255,255,255,0.89);
+  -webkit-border-radius: 7px;
+  border-radius: 7px;
+  font: normal 16px/1 Georgia, serif;
+  color: rgba(255,204,204,1);
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  background: rgba(42,44,73,0.89);
+  -webkit-box-shadow: 1px 1px 1px 0 rgba(0,0,0,0.3) ;
+  box-shadow: 1px 1px 1px 0 rgba(0,0,0,0.3) ;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.2) ;
+}
+
+#tree-tooltip{   
+  position: absolute;           
+  text-align: center;           
+  /*width: 60px;                  
+  height: 28px;  */               
+  padding: 2px;             
+  font: 12px sans-serif;        
+  background: lightsteelblue;   
+  border: 0px;      
+  border-radius: 8px;           
+  pointer-events: none;         
+}

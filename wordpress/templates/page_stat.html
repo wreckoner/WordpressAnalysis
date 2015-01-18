@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block content %}
+	<h2 id="page-heading">Post statistics</h2>
 	<table>
 		<tr><td>Website</td><td><a href="{{db_object.parent}}" target="_blank">{{db_object.parent}}</a></td></tr>
 		<tr><td>Page</td><td>{{db_object.title}}</td></tr>
@@ -22,12 +23,16 @@
 	<h3>Text</h3>
 		{{db_object.content}}
 	</div>
+{% endblock %}
+
+{% block visuals %}
 	<div id="word-count">
 		<h3>Word Frequencies</h3>
 		<div id='bars'>
 		{% for count in word_bags %}
-			<button class="bars" onclick="word_bag({{count}});">{{count}}</button><br>
+			<button class="bars" onclick="word_bag({{count}});" style="width : 150px">{{count}}</button><br>
 		{%  endfor %}
+		<script type="text/javascript">bar_resize();</script>
 		</div>
 		{% for count, words in word_bags.items %}
 		<div class="bar-words" id="{{count}}">

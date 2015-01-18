@@ -1,0 +1,38 @@
+{% extends 'app_base.html' %}
+
+{% block staticfiles %}
+{% load staticfiles %}
+		<link rel="stylesheet" type="text/css" href= {% static "site_stat.css" %}>
+		<script type="text/javascript" src="{% static "site_stat.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+	<h2 id="page-heading">Site statistics</h2>
+
+	<table>
+		<tr><td>Website</td><td><a href="{{db_object.url}}" target="_blank">{{db_object.url}}</a></td></tr>
+		<tr><td>Last Checked</td><td>{{db_object.published}}</td></tr>
+		<tr><td>Latest Posts</td><td>{{sub_pages | length}}</td></tr>
+	</table>
+
+		<p>
+			<button onclick="posts();">Posts</button>
+			<button onclick="site_tree();">Site Tree</button>
+		</p>
+	<div id="post-container">
+		<table>
+			<tr><th>Post</th><th>Published</th><th>Analysis</th></tr>
+			{% for post in sub_pages %}
+			<tr><td>{{post.title}}</td><td>{{post.published}}</td><td style="text-align:center;"><a href="/wordpress/stats?url={{post.url}}&level={{post.level}}">Results</a></td></tr>
+			{% endfor %}
+		</table>
+	</div>
+{% endblock %}
+
+{% block visuals %}
+		<div id="site-tree">
+			<script type="text/javascript">
+				tree_visual({{sub_pages_json | safe}});
+			</script>
+		</div>
+{% endblock %}

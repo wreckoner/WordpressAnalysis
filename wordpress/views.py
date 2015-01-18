@@ -26,29 +26,35 @@ def home(requests):
 def stats(requests):
 	template = 'tuftsWPA_stats.html'
 	url, level = requests.GET['url'], requests.GET['level']
-	if level == 'page':
-		template = 'page_stat.html'
 	db_object = Wordpress.objects.filter(url = url)[0]
-	page_label = '. '.join([db_object.title, db_object.subtitle])
 	sub_pages = None
 	word_count = None
 	word_count_json = None
 	word_bags = None
-	if level == 'site':
-		header = ''.join(['Statistics of the site - ', page_label])
-		sub_pages = Wordpress.objects.filter(parent=url)
-	else:
-		header = 'Page Statistics'
+	sub_pages_json = None
+
+	if level == 'page':
+		template = 'page_stat.html'
+		page_label = '. '.join([db_object.title, db_object.subtitle])
 		word_count, word_bags = Analysis(db_object.content).word_counter()
 		word_count = [[k.capitalize().encode('ascii', 'ignore'), word_count[k]] for k in word_count]
 		word_count.sort(key=lambda x:x[1], reverse=True)
 		word_count_json = json.dumps(word_count, cls=DjangoJSONEncoder) 
+	elif level == 'site':
+		template = 'site_stat.html'
+		page_label = '. '.join([db_object.title, db_object.subtitle])
+		sub_pages = Wordpress.objects.filter(parent=url)
+		temp = [{'url' : page.url, 'title' : page.title, 'subtitle' : page.subtitle, 'published' : page.published} for page in sub_pages]
+		temp = {'url' : db_object.url, 'title' : db_object.title, 'subtitle' : db_object.subtitle, 'published' : db_object.published, 'children' : temp}
+		sub_pages_json = json.dumps(temp, cls=DjangoJSONEncoder)
+	
 	context = {
 	'title' : 'Tufts Wordpress Analysis',
-	'header' : header,
+	'header' : page_label,
 	'level' : level,
 	'db_object' : db_object,
 	'sub_pages' : sub_pages,
+	'sub_pages_json' : sub_pages_json,
 	'word_count' : word_count,
 	'word_bags' : word_bags,
 	'word_count_json' : word_count_json,

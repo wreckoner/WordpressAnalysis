@@ -24,3 +24,12 @@ function word_bag(count) {
 	}
 	document.getElementById(count).style.display = "block";
 }
+
+function bar_resize() {
+	var bars = $(".bars");
+	for (var i = 0; i<bars.length; i++){
+		var count = bars[i].firstChild.nodeValue;
+		bars[i].style.width = count*20+"px";
+		console.log(bars[i].style.width);
+	}
+}
