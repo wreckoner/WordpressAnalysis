@@ -1,9 +1,10 @@
 {% extends 'app_base.html' %}
 
 				{% block staticfiles %}
-						<script src="http://d3js.org/d3.v3.min.js"></script>
+						
 				{% load staticfiles %}
 						<link rel="stylesheet" type="text/css" href= {% static "root_stat.css" %}>
+						<script type="text/javascript" src="{% static "d3.v3.min.js" %}"></script>
 						<script type="text/javascript" src="{% static "root_stat.js" %}"></script>
 				{% endblock %}
 
