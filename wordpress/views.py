@@ -14,18 +14,21 @@ def home(requests):
 	sites = Wordpress.objects.filter(level='site')
 	site_tree = {'url' : db_object.url, 'title' : db_object.title, 'subtitle' : db_object.subtitle, 'published' : db_object.published, 'level' : db_object.level, 'children' : []}
 	site_tree['children'] = [{'url' : site.url, 'title' : site.title, 'subtitle' : site.subtitle, 'published' : site.published, 'level' : site.level, 'children' : []} for site in sites]
-	# for site in site_tree['children']:
-	# 	temp = [{'url' : post.url, 'title' : post.title, 'subtitle' : post.subtitle, 'published' : post.published, 'level' : post.level} for post in Wordpress.objects.filter(parent=site['url'])]
-	# 	site['children'] = temp
+	for site in site_tree['children']:
+		temp = [{'url' : post.url, 'title' : post.title, 'subtitle' : post.subtitle, 'published' : post.published, 'level' : post.level} for post in Wordpress.objects.filter(parent=site['url'])]
+		site['children'] = temp
+	# text = ' '.join([item.content for item in Wordpress.objects.only('content').filter(level='page')])
+	# word_count, word_bags = Analysis(text).word_counter()
 	context = {
 	'title' : 'Tufts WordPress Analysis',
 	'header' : 'Tufts Wordpress Analysis (WPA) Project',
 	'db_object' : db_object,
+	# 'word_count' : word_count
+	# 'word_bags' : word_bags,
 	'sites' : sites,
 	'site_tree' : json.dumps(site_tree, cls=DjangoJSONEncoder),
 	'footer' : datetime.datetime.now().year
 	}
-	# pprint.pprint(site_tree)
 	return render(requests, template, context)
 
 

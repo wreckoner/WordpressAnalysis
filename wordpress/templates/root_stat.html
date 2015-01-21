@@ -1,6 +1,7 @@
 {% extends 'app_base.html' %}
 
 				{% block staticfiles %}
+						<script src="http://d3js.org/d3.v3.min.js"></script>
 				{% load staticfiles %}
 						<link rel="stylesheet" type="text/css" href= {% static "root_stat.css" %}>
 						<script type="text/javascript" src="{% static "root_stat.js" %}"></script>
@@ -13,9 +14,11 @@
 						<tr><td>Last Checked</td><td>{{db_object.published}}</td></tr>
 						<tr><td>Sites Crawled</td><td>{{sites | length}}</td></tr>
 					</table>
+					<p>Welcome to the Tufts Wordpress Analysis website. This is an online application which scrapes all the wordpress sites under tufts.edu domain and analyzes the data, trying to find trends and patterns in the different blogs/sites around the campus.</p>
 					<p>
 						<button onclick="sites();">Sites</button>
 						<button onclick="site_tree();">Site Tree</button>
+						<button onclick="site_bubble();">Bubbles</button>
 					</p>
 					<div id="sites-container">
 						<table>
@@ -34,5 +37,8 @@
 				{% block visuals %}
 					<div id="site-tree">
 						<script type="text/javascript">tree_visual({{site_tree | safe}});</script>
+					</div>
+					<div id="site-bubble">
+						<script type="text/javascript">bubble_visual({{site_tree | safe}});</script>
 					</div>
 				{% endblock %}
