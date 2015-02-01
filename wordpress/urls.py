@@ -6,4 +6,5 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'wordpress.views.home'),
     url(r'^stats/', 'wordpress.views.stats'),
+    url(r'^api/', 'wordpress.views.api'),
 )

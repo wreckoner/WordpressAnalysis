@@ -5,6 +5,7 @@
 				{% load staticfiles %}
 						<link rel="stylesheet" type="text/css" href= {% static "root_stat.css" %}>
 						<script type="text/javascript" src="{% static "d3.v3.min.js" %}"></script>
+						<script type="text/javascript" src="{% static "d3.layout.cloud.js" %}"></script>
 						<script type="text/javascript" src="{% static "root_stat.js" %}"></script>
 				{% endblock %}
 
@@ -17,9 +18,10 @@
 					</table>
 					<p>Welcome to the Tufts Wordpress Analysis website. This is an online application which scrapes all the wordpress sites under tufts.edu domain and analyzes the data, trying to find trends and patterns in the different blogs/sites around the campus.</p>
 					<p>
-						<button onclick="sites();">Sites</button>
-						<button onclick="site_tree();">Site Tree</button>
-						<button onclick="site_bubble();">Bubbles</button>
+						<button class="button-bar" onclick="sites();">Sites</button>
+						<!-- <button class="button-bar" onclick="site_tree();">Site Tree</button> -->
+						<button class="button-bar" onclick="site_bubble();">Bubbles</button>
+						<button class="button-bar" onclick="site_trends();">Trends</button>
 					</p>
 					<div id="sites-container">
 						<table>
@@ -37,9 +39,25 @@
 
 				{% block visuals %}
 					<div id="site-tree">
-						<script type="text/javascript">tree_visual({{site_tree | safe}});</script>
+						<script type="text/javascript">//tree_visual({{site_tree | safe}});</script>
 					</div>
 					<div id="site-bubble">
-						<script type="text/javascript">bubble_visual({{site_tree | safe}});</script>
+						<script type="text/javascript">bubble_visual({{site_tree | safe}}, d3.select("#site-bubble"));</script>
+					</div>
+					<div id="site-trends" class="stylish-blue">
+						<h3 style="text-align:center;">Post trends of Tufts Wordpress sites</h3>
+						<p>Select the time range over which you want to see the trends in posts and pages published in different wordpress sites.</p>
+						<label class="neon-text" for="from">From</label>
+						<input type="text" class="date-field" id="from" name="from">
+						<label class="neon-text" for="to">To</label>
+						<input type="text" class="date-field" id="to" name="to">
+						<script type="text/javascript">trends_visual();</script>
+						<button class="button-grey" onclick="analyze();">Analyze</button>
+						<div id="ajax-loader" style="margin-top : 10px; display : none; text-align : center;">
+							<img src="{% static "ajax-loader.gif" %}">
+						</div>
+						<div id="trend-summary" style="margin-top : 10px;"></div>
+						<div id="trend-bubble" style="margin-top : 10px; text-align:center;"></div>
+						<div id="trend-word-cloud" style="margin-top : 10px; text-align:center;"></div>
 					</div>
 				{% endblock %}

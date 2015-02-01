@@ -10,8 +10,6 @@ body{
   width: 100%;
   position: fixed;
   top: 0;
-  font: normal 14px/1 Verdana, Geneva, sans-serif;
-  color: rgba(0,0,0,0.89);
   background: rgba(165,211,229,1);
 }
 
@@ -40,7 +38,7 @@ body{
   border: none;
   -webkit-border-radius: 9px;
   border-radius: 9px;
-  font: normal 20px/1 Tahoma, Geneva, sans-serif;
+  font: normal 20px/1 "Audiowide", Helvetica, sans-serif;
   color: rgba(35,12,12,0.89);
   text-align: center;
   -o-text-overflow: ellipsis;
@@ -51,7 +49,7 @@ body{
 .header button:hover {
   -webkit-border-radius: 10px;
   border-radius: 10px;
-  font: normal normal bold 20px/1 Tahoma, Geneva, sans-serif;
+  font: normal normal bold 20px/1 "Audiowide", Helvetica, sans-serif;
   background: rgba(117,190,239,0.89);
   text-shadow: 2px 2px 2px rgba(0,0,0,0.5) ;
 }
@@ -71,7 +69,44 @@ body{
   box-sizing: border-box;
   width: 100%;
   padding: 20px;
-  font: normal 14px/1 Verdana, Geneva, sans-serif;
-  color: rgba(0,0,0,0.89);
   background: rgba(165,211,229,1);
+}
+
+.gradient-pattern {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  border: none;
+  /*color: rgba(159,204,234,1);*/
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  background: -webkit-linear-gradient(90deg, #FFFFFF 2px, rgba(0,0,0,0) 2px), -webkit-linear-gradient(0deg, #FFFFFF 2px, rgba(0,0,0,0) 2px), -webkit-linear-gradient(90deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px), -webkit-linear-gradient(0deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px), rgb(34, 102, 153);
+  background: -moz-linear-gradient(0deg, #FFFFFF 2px, rgba(0,0,0,0) 2px), -moz-linear-gradient(90deg, #FFFFFF 2px, rgba(0,0,0,0) 2px), -moz-linear-gradient(0deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px), -moz-linear-gradient(90deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px), rgb(34, 102, 153);
+  background: linear-gradient(0deg, #FFFFFF 2px, rgba(0,0,0,0) 2px), linear-gradient(90deg, #FFFFFF 2px, rgba(0,0,0,0) 2px), linear-gradient(0deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px), linear-gradient(90deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px), rgb(34, 102, 153);
+  background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+  -webkit-background-origin: padding-box;
+  background-origin: padding-box;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+  background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+  -webkit-box-shadow: 5px 5px 8px 2px rgba(0,0,0,0.4) ;
+  box-shadow: 5px 5px 8px 2px rgba(0,0,0,0.4) ;
+}
+
+.stylish-blue {
+  font: normal 14px/1 "Audiowide", Helvetica, sans-serif;
+  color: #84b5d6;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  text-shadow: 2px 2px 2px rgba(0,0,0,0.5) ;
+}
+
+.stylish-letterhead {
+  font: normal normal bold 100%/1 "Audiowide", Helvetica, sans-serif;
+  color: #d0e0ea;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  text-shadow: 0 0 9px rgba(255,255,86,0.7) , 2px 2px 2px rgba(0,0,0,0.5) ;
 }

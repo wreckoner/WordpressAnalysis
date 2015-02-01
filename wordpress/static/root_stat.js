@@ -10,6 +10,10 @@ function site_bubble() {
 	$("#site-bubble").toggle();
 }
 
+function site_trends () {
+	$("#site-trends").toggle();
+}
+
 function tree_visual (data) {
 	d3.select("#site-tree")
 			.style("height", "600px");
@@ -74,16 +78,19 @@ function tree_visual (data) {
 			.attr("d", diagonal);
 }
 
-function bubble_visual (root) {
+function bubble_visual (root, container) {
+	
+	container.selectAll("svg").remove();
 
 	var margin = 20,
 	    diameter = 1000;
 
-   var tooltip = d3.select("#site-bubble").append("div").attr("id", "tooltip").style("opacity", 0);
+   //var tooltip = d3.select("#site-bubble").append("div").attr("id", "tooltip").style("opacity", 0);
+   var tooltip = container.append("div").attr("id", "tooltip").style("opacity", 0);
 
 	var color = d3.scale.linear()
 	    .domain([-1, 5])
-	    .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
+	    .range(["hsl(209,80%,80%)", "hsl(228,30%,40%)"])
 	    .interpolate(d3.interpolateHcl);
 
 	var pack = d3.layout.pack()
@@ -91,7 +98,8 @@ function bubble_visual (root) {
 	    .size([diameter - margin, diameter - margin])
 	    .value(function(d) { return 1; })
 
-	var svg = d3.select("#site-bubble").append("svg")
+	// var svg = d3.select("#site-bubble").append("svg")
+	var svg = container.append("svg")
 	    .attr("width", diameter)
 	    .attr("height", diameter)
 	  .append("g")
@@ -109,21 +117,21 @@ function bubble_visual (root) {
 	  .style("fill", function(d) { return d.children ? color(d.depth) : null; })
 	  .on("click", function(d) { if (focus !== d) zoom(d), d3.event.stopPropagation(); })
 	  .on("mouseover", function(d) {
-				tooltip.transition()
-					.duration(100)
-					.style("opacity", 0.9);
-				tooltip.html(d.title+".<br/>"+d.subtitle+".<br/>Published : "+d.published.slice(0, 10))
-					.style("left", d3.event.pageX+"px")
-					.style("top", d3.event.pageY+"px");
-			})
-			.on("mouseout", function(d) {
-				tooltip.transition()
-					.duration(100)
-					.style("opacity", 0);
-			})
-			.on("dblclick", function(d){
-				window.location.href="/wordpress/stats?url="+d.url+"&level="+d.level;
-			});
+			tooltip.transition()
+				.duration(100)
+				.style("opacity", 0.9);
+			tooltip.html(d.title+".<br/>"+d.subtitle+".<br/>Published : "+d.published.slice(0, 10))
+				.style("left", d3.event.pageX+"px")
+				.style("top", d3.event.pageY+"px");
+		})
+		.on("mouseout", function(d) {
+			tooltip.transition()
+				.duration(100)
+				.style("opacity", 0);
+		})
+		.on("dblclick", function(d){
+			window.location.href="/wordpress/stats?url="+d.url+"&level="+d.level;
+		});
 
 	var text = svg.selectAll("text")
 	  .data(nodes)
@@ -135,7 +143,8 @@ function bubble_visual (root) {
 
 	var node = svg.selectAll("circle,text");
 
-	  d3.select("#site-bubble")
+	  // d3.select("#site-bubble")
+	  container
 	      .style("background", color(-1))
 	      .on("click", function() { zoom(root); });
 
@@ -165,4 +174,102 @@ function bubble_visual (root) {
 	  }
 
 	d3.select(self.frameElement).style("height", diameter + "px");
+}
+
+function trends_visual () {
+	$(function() {
+	    $( "#from" ).datepicker({
+	      defaultDate: "-3m",
+	      changeMonth: true,
+	      numberOfMonths: 3,
+	      onClose: function( selectedDate ) {
+	        $( "#to" ).datepicker( "option", "minDate", selectedDate );
+	      }
+	    });
+	    $( "#to" ).datepicker({
+	      defaultDate: "0",
+	      changeMonth: true,
+	      numberOfMonths: 3,
+	      onClose: function( selectedDate ) {
+	        $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+	      }
+	    });
+	  });
+}
+
+function analyze () {
+	// Sends a GET request to the server with the date range, receives the data and visualizes it in several ways!
+	var from = $("#from").datepicker("getDate");
+	var to = $("#to").datepicker("getDate");
+	var flag = true
+	if (from === null){
+		$("#from").val("!?!?!");
+		flag = false;
+	}
+	if(to === null){
+		$("#to").val("!?!?!");
+		flag = false;
+	}
+	if (flag){
+		$.ajaxSetup({
+		    beforeSend:function(){
+		        $("#ajax-loader").show();
+		    },
+		    complete:function(){
+		        $("#ajax-loader").hide();
+		    }
+		});
+		var temp = $.get("api", {from : from , to : to}, function (data) {
+			trend_summary(data);	//Print summary
+			//bubble_visual(data['site_tree'], d3.select("#trend-bubble"));	//Bubble Visual
+			trend_word_cloud(data['word_count'], d3.select("#trend-word-cloud")); //Word Cloud Visual
+		}, "json");
+	}
+}
+
+function trend_summary (data) {
+	// Prints the stats of the results to #trend-summary div
+	var summary = $("#trend-summary");
+	summary.empty();
+	summary.append( "Number of posts (pages) published : "+data['page_count']);
+	summary.append("<br> Number of sites with activity : "+data['site_count']);
+}
+
+function trend_word_cloud(data, container) {
+	container.selectAll("svg").remove();
+	
+	data =data.slice(1, 50);
+	var fill = d3.scale.category20();
+	var x = $("#site-trends").innerWidth()*0.9;
+	var y = 500;
+
+
+	d3.layout.cloud().size([x, y])
+	  .words(data.map(function(d) {
+	    return {text: d[0], size: 10 + d[1] * 10};
+	  }))
+	  .rotate(function() { return ~~(Math.random() * 2) * 90; })
+	  .font("Impact")
+	  .fontSize(function(d) { return d.size; })
+	  .on("end", draw)
+	  .start();
+
+	function draw(words) {
+	container.append("svg")
+	    .attr("width", x)
+	    .attr("height", y)
+	  .append("g")
+	    .attr("transform", "translate("+x/2+","+y/2+")")
+	  .selectAll("text")
+	    .data(words)
+	  .enter().append("text")
+	    .style("font-size", function(d) { return d.size + "px"; })
+	    .style("font-family", "Impact")
+	    .style("fill", function(d, i) { return fill(i); })
+	    .attr("text-anchor", "middle")
+	    .attr("transform", function(d) {
+	      return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+	    })
+	    .text(function(d) { return d.text; });
+	}
 }

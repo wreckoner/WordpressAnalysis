@@ -1,10 +1,12 @@
 from django.shortcuts import render
+from django.http import JsonResponse
+from django.core.serializers.json import DjangoJSONEncoder
+from django.utils import timezone
+from email.utils import parsedate_tz, mktime_tz
 from models import Wordpress
 from common.analyzer import Analysis
-from django.core.serializers.json import DjangoJSONEncoder
 import json, datetime, pprint
 
-# Create your views here.
 
 def home(requests):
 	'''Handler for the root/home page of the Wordpress Analysis Project.'''
@@ -67,3 +69,35 @@ def stats(requests):
 	'footer' : datetime.datetime.now().year
 	}
 	return render(requests, template, context)
+
+
+def api(requests):
+	dump = {}
+	try:
+		start = timezone.make_aware(datetime.datetime.fromtimestamp(mktime_tz(parsedate_tz(requests.GET['from']))), timezone.get_current_timezone())
+		stop = timezone.make_aware(datetime.datetime.fromtimestamp(mktime_tz(parsedate_tz(requests.GET['to']))), timezone.get_current_timezone())
+		pages = Wordpress.objects.filter(published__range = [start, stop]).filter(level='page')
+		dump['page_count'] = len(pages)
+		db_object = Wordpress.objects.filter(level='root')[0]
+		site_tree = {'url' : db_object.url, 'title' : db_object.title, 'subtitle' : db_object.subtitle, 'published' : db_object.published, 'level' : db_object.level, 'children' : []}
+		_sites = []
+		for page in pages:
+			if page.parent not in _sites:
+				_sites.append(page.parent)
+		sites = [Wordpress.objects.filter(url=site)[0] for site in _sites]
+		site_tree['children'] = [{'url' : site.url, 'title' : site.title, 'subtitle' : site.subtitle, 'published' : site.published, 'level' : site.level, 'children' : []} for site in sites]
+		dump['site_count'] = len(site_tree['children'])
+		for site in site_tree['children']:
+			temp = [{'url' : post.url, 'title' : post.title, 'subtitle' : post.subtitle, 'published' : post.published, 'level' : post.level} for post in pages if post.parent == site['url']]
+			site['children'] = temp
+		# pprint.pprint(site_tree)
+		dump['site_tree'] = site_tree
+		text_dump = ' '.join([page.content for page in pages])
+		word_count, word_bags = Analysis(text_dump).word_counter()
+		word_count = [[k.encode('utf-8', 'ignore'), word_count[k]] for k in word_count]
+		word_count.sort(key=lambda x:x[1], reverse=True)
+		dump['word_count'] = word_count
+		#print word_count
+	except Exception as e:
+		print str(e)
+	return JsonResponse(dump)
