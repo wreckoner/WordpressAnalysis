@@ -8,5 +8,6 @@ urlpatterns = patterns('',
 
     url(r'^$', include('home.urls')),
     url(r'^wordpress/', include('wordpress.urls')),
+    url(r'^rssfeed/', 'rssfeed.views.api'),
     url(r'^admin/', include(admin.site.urls)),
 )

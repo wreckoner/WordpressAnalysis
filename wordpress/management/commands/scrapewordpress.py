@@ -13,8 +13,14 @@ class Command(BaseCommand):
 		self.stdout.write('Scraping the Tufts Wordpress Sites\n')
 		self.root = "http://sites.tufts.edu/"
 		self.pages = 50			# No. of pages of root that will be crawled
-		self.age = 2			# Sets the number of months from present beyond which posts are ignored.
+		self.age = 6			# Sets the number of months from present beyond which posts are ignored.
 		root_title, sites = self.scrape(self.root, 'root')
+		prior_sites = [page.url for page in Wordpress.objects.filter(level='site')]
+		print 'Prior number of sites %s' %len(prior_sites)
+		for site in prior_sites:
+			if site not in sites:
+				sites.append(site)
+		print 'Total number of sites %s' %len(sites)
 		Wordpress.objects.all().delete()					# Delete all revious records
 		self.save({'title' : root_title}, 'root')
 		for site in sites:
