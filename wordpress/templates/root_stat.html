@@ -19,7 +19,6 @@
 					<p>Welcome to the Tufts Wordpress Analysis website. This is an online application which scrapes all the wordpress sites under tufts.edu domain and analyzes the data, trying to find trends and patterns in the different blogs/sites around the campus.</p>
 					<p>
 						<button class="button-bar" onclick="sites();">Sites</button>
-						<!-- <button class="button-bar" onclick="site_tree();">Site Tree</button> -->
 						<button class="button-bar" onclick="site_bubble();">Bubbles</button>
 						<button class="button-bar" onclick="site_trends();">Trends</button>
 					</p>
@@ -38,9 +37,6 @@
 				{% endblock %}
 
 				{% block visuals %}
-					<div id="site-tree">
-						<script type="text/javascript">//tree_visual({{site_tree | safe}});</script>
-					</div>
 					<div id="site-bubble">
 						<script type="text/javascript">bubble_visual({{site_tree | safe}}, d3.select("#site-bubble"));</script>
 					</div>
