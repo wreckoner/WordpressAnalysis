@@ -111,7 +111,7 @@ function bubble_visual (root, container) {
 function trends_visual () {
 	$(function() {
 	    $( "#from" ).datepicker({
-	      defaultDate: "-3m",
+	      defaultDate: "-2m",
 	      changeMonth: true,
 	      numberOfMonths: 3,
 	      onClose: function( selectedDate ) {
@@ -153,8 +153,8 @@ function analyze () {
 		});
 		var temp = $.get("api", {from : from , to : to}, function (data) {
 			trend_summary(data);	//Print summary
-			//bubble_visual(data['site_tree'], d3.select("#trend-bubble"));	//Bubble Visual
 			trend_word_cloud(data['word_count'], d3.select("#trend-word-cloud")); //Word Cloud Visual
+			bar_graph(data['word_bags'], d3.select("#trend-bar-graph")); //Word Count Bar graph
 		}, "json");
 	}
 }
@@ -207,5 +207,71 @@ function trend_word_cloud(data, container) {
 }
 
 function bar_graph(data, container) {
+	container.selectAll("svg").remove();
+
+	container.style("background", "white");
+
+	var margin = {top: 50, right: 30, bottom: 50, left: 30},
+	    width = parseInt(container.style("width")) - margin.left - margin.right,
+	    height = 500 - margin.top - margin.bottom;
+
+	var x = d3.scale.ordinal()
+	    .rangeRoundBands([0, width], .1, .3);
+
+	var y = d3.scale.linear()
+	    .range([height, 0]);
+
+	var xAxis = d3.svg.axis()
+	    .scale(x)
+	    .orient("bottom");
+
+	var yAxis = d3.svg.axis()
+	    .scale(y)
+	    .orient("left");
+	    //.ticks(8, "%");
+
+	var svg = container.append("svg")
+	    .attr("width", width + margin.left + margin.right)
+	    .attr("height", height + margin.top + margin.bottom)
+	  .append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 	
+	x.domain(data.map(function(d) { return d.count; }));
+	y.domain([0, d3.max(data, function(d) { return d.count; })]);
+
+	svg.append("text")
+      .attr("class", "title")
+      .attr("x", x(data[0].count))
+      .attr("y", -26)
+      .text("Word Frequencies");
+
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+    svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
+
+    svg.selectAll(".bar")
+      .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.count); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.count); })
+      .attr("height", function(d) { return height - y(d.count); })
+      .on("mouseover", function(d) { d3.select(this).style("cursor", "pointer");})
+      .on("click", function(d) {
+      	d3.select("#word-list").empty();
+      	d3.select("#word-list").text(d.words);});
+      	// for (var i = 0; i < d.words.length; i++) {
+      	//  	d3.select("#word-list").text += ", "+d.words[i];
+      	//  }; });
+
+
+    d3.select("#site-trends").append("div")
+      .attr("id", "word-list")
+      .style("margin-top", "10px");
 }

@@ -1,5 +1,6 @@
 ''' Some common methods used by some of the apps. '''
 import re, copy, stopwords, random, os
+from operator import itemgetter
 
 
 class Analysis():
@@ -23,12 +24,25 @@ class Analysis():
 	def word_counter(self):
 		words = self.word_list
 		word_counts = {k:0 for k in words}
-		word_bags = {}
+		word_bags = []
 		for word in words:
 			word_counts[word] += 1
-		for i in word_counts.values():
-			if i not in word_bags.keys():
-				word_bags[i] = []
+
 		for word in word_counts:
-			word_bags[word_counts[word]].append(word.capitalize())
+			flag = False
+			for bag in word_bags:
+				if bag['count'] == word_counts[word]:
+					bag['words'].append(word)
+					flag = True
+					break
+			if not flag:
+				word_bags.append({'count' : word_counts[word], 'words' : [word]})
+		word_bags.sort(key=itemgetter('count'))
+		if len(word_bags) > 50:
+			word_bags = word_bags[-50:]
+		# for i in word_counts.values():
+		# 	if i not in word_bags.keys():
+		# 		word_bags[i] = []
+		# for word in word_counts:
+		# 	word_bags[word_counts[word]].append(word.capitalize())
 		return word_counts, word_bags

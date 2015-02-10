@@ -299,3 +299,31 @@
   -o-transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
   transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
 }
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: blue;
+}
+
+.title {
+  font: bold 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.axis {
+  font: 10px sans-serif;
+  color: steelblue;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
