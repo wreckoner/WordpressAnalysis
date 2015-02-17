@@ -28,7 +28,7 @@ function bubble_visual (root, container) {
 	var pack = d3.layout.pack()
 	    .padding(2)
 	    .size([diameter - margin, diameter - margin])
-	    .value(function(d) { return 1; })
+	    .value(function(d) { return 1; });
 
 	// var svg = d3.select("#site-bubble").append("svg")
 	var svg = container.append("svg")
@@ -143,6 +143,10 @@ function analyze () {
 		flag = false;
 	}
 	if (flag){
+		$("#trend-word-cloud").empty();
+		$("#trend-bar-graph").empty();
+		$("#trend-summary").empty();
+		$("#word-list")
 		$.ajaxSetup({
 		    beforeSend:function(){
 		        $("#ajax-loader").show();
@@ -153,8 +157,10 @@ function analyze () {
 		});
 		var temp = $.get("api", {from : from , to : to}, function (data) {
 			trend_summary(data);	//Print summary
-			trend_word_cloud(data['word_count'], d3.select("#trend-word-cloud")); //Word Cloud Visual
-			bar_graph(data['word_bags'], d3.select("#trend-bar-graph")); //Word Count Bar graph
+			if (data['page_count'] > 0){
+				trend_word_cloud(data['word_count'], d3.select("#trend-word-cloud")); //Word Cloud Visual
+				bar_graph(data['word_bags'], d3.select("#trend-bar-graph")); //Word Count Bar graph
+			}
 		}, "json");
 	}
 }
@@ -170,15 +176,15 @@ function trend_summary (data) {
 function trend_word_cloud(data, container) {
 	container.selectAll("svg").remove();
 	
-	data =data.slice(1, 50);
+	data =data.slice(0, 50);
 	var fill = d3.scale.category20();
 	var x = $("#site-trends").innerWidth()*0.9;
 	var y = 500;
-
+	var scale = 100/data[0][1];
 
 	d3.layout.cloud().size([x, y])
 	  .words(data.map(function(d) {
-	    return {text: d[0], size: 10 + d[1] * 10};
+	    return {text: d[0], size: d[1] * scale};
 	  }))
 	  .rotate(function() { return ~~(Math.random() * 2) * 90; })
 	  .font("Impact")
@@ -264,11 +270,11 @@ function bar_graph(data, container) {
       .attr("height", function(d) { return height - y(d.count); })
       .on("mouseover", function(d) { d3.select(this).style("cursor", "pointer");})
       .on("click", function(d) {
-      	d3.select("#word-list").empty();
-      	d3.select("#word-list").text(d.words);});
-      	// for (var i = 0; i < d.words.length; i++) {
-      	//  	d3.select("#word-list").text += ", "+d.words[i];
-      	//  }; });
+      	$("#word-list").empty();
+      	var words = document.getElementById("word-list");
+      	for (var i = 0; i < d.words.length; i++) {
+      	 	words.innerHTML += d.words[i] + ". ";
+      	 }; });
 
 
     d3.select("#site-trends").append("div")
