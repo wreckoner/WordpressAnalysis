@@ -1,5 +1,6 @@
 ''' Some common methods used by some of the apps. '''
 import re, copy, stopwords, random, os
+from collections import Counter
 from operator import itemgetter
 
 
@@ -15,7 +16,7 @@ class Analysis():
 		temp = self.text.lower()
 		temp = re.sub(r'http.*? ', ' ', temp)
 		temp = re.sub(r'\b\d+\b', '', temp)
-		self.word_list = re.compile(r'\b[\w\-\']+\b', re.IGNORECASE).findall(temp)
+		self.word_list = re.compile(r'\b[\w\-\']+\b', re.IGNORECASE|re.UNICODE).findall(temp)
 		''' Remove all stopwords from word list. '''
 		for word in self.stopwords:
 			self.word_list = filter(lambda x : x != word, self.word_list)
@@ -23,11 +24,8 @@ class Analysis():
 
 	def word_counter(self):
 		words = self.word_list
-		word_counts = {k:0 for k in words}
+		word_counts = dict(Counter(words).most_common(50))
 		word_bags = []
-		for word in words:
-			word_counts[word] += 1
-
 		for word in word_counts:
 			flag = False
 			for bag in word_bags:
@@ -40,9 +38,6 @@ class Analysis():
 		word_bags.sort(key=itemgetter('count'))
 		if len(word_bags) > 50:
 			word_bags = word_bags[-50:]
-		# for i in word_counts.values():
-		# 	if i not in word_bags.keys():
-		# 		word_bags[i] = []
-		# for word in word_counts:
-		# 	word_bags[word_counts[word]].append(word.capitalize())
+		word_counts = [{'text' : item, 'count' : word_counts[item]} for item in word_counts]
+		word_counts.sort(key=lambda x:x['count'], reverse=True)
 		return word_counts, word_bags

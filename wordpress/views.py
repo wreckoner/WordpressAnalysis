@@ -94,8 +94,6 @@ def api(requests):
 		dump['site_tree'] = site_tree
 		text_dump = ' '.join([page.content for page in pages])
 		word_count, word_bags = Analysis(text_dump).word_counter()
-		word_count = [[k.encode('utf-8', 'ignore'), word_count[k]] for k in word_count]
-		word_count.sort(key=lambda x:x[1], reverse=True)
 		dump['word_count'] = word_count
 		dump['word_bags'] = word_bags
 		#print word_count

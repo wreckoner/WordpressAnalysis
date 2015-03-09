@@ -180,11 +180,11 @@ function trend_word_cloud(data, container) {
 	var fill = d3.scale.category20();
 	var x = $("#site-trends").innerWidth()*0.9;
 	var y = 500;
-	var scale = 100/data[0][1];
+	var scale = 100/data[0]['count'];
 
 	d3.layout.cloud().size([x, y])
 	  .words(data.map(function(d) {
-	    return {text: d[0], size: d[1] * scale};
+	    return {text: d['text'], size: d['count'] * scale};
 	  }))
 	  .rotate(function() { return ~~(Math.random() * 2) * 90; })
 	  .font("Impact")

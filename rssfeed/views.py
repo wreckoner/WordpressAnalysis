@@ -20,9 +20,7 @@ def api(requests):
 		for pair in table:
 			words = words.replace(pair, table[pair])
 		word_count, word_bags = Analysis(words).word_counter()
-		word_count = [[k.encode('utf-8', 'ignore'), word_count[k]] for k in word_count]
-		word_count.sort(key=lambda x:x[1], reverse=True)
-		dispatch['words_count'] = word_count
+		dispatch['word_counts'] = word_count
 		dispatch['word_bags'] = word_bags
 		dispatch['status'] = True
 		dispatch['message'] = 'success'
