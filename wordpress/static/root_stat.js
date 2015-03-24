@@ -133,6 +133,7 @@ function analyze () {
 	// Sends a GET request to the server with the date range, receives the data and visualizes it in several ways!
 	var from = $("#from").datepicker("getDate");
 	var to = $("#to").datepicker("getDate");
+	var site = $("#site-option").val();
 	var flag = true
 	if (from === null){
 		$("#from").val("!?!?!");
@@ -155,7 +156,7 @@ function analyze () {
 		        $("#ajax-loader").hide();
 		    }
 		});
-		var temp = $.get("api", {from : from , to : to}, function (data) {
+		var temp = $.get("api", {from : from , to : to, site : site}, function (data) {
 			trend_summary(data);	//Print summary
 			if (data['page_count'] > 0){
 				trend_word_cloud(data['word_count'], d3.select("#trend-word-cloud")); //Word Cloud Visual

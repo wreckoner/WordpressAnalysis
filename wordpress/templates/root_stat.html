@@ -48,6 +48,22 @@
 						<label class="neon-text" for="to">To</label>
 						<input type="text" class="date-field" id="to" name="to">
 						<script type="text/javascript">trends_visual();</script>
+						<br>
+						<label class="neon-text" for="Sites">Sites</label>
+						
+						<select id="site-option">
+								<option selected="selected" value="all">All Websites</option>
+							{% for site in sites %}
+								<option value={{site.url}}>
+									{% if site.title|length_is:0 %} 
+									{{site.url}} 
+									{% else %}
+									{{site.title|slice:":30"}}..
+									{% endif %}
+								</option>
+							{% endfor %}
+						</select>
+
 						<button class="button-grey" onclick="analyze();">Analyze</button>
 						<div id="ajax-loader" style="margin-top : 10px; display : none; text-align : center;">
 							<img src="{% static "ajax-loader.gif" %}">

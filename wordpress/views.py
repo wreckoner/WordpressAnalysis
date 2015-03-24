@@ -76,14 +76,24 @@ def api(requests):
 	try:
 		start = timezone.make_aware(datetime.datetime.fromtimestamp(mktime_tz(parsedate_tz(requests.GET['from']))), timezone.get_current_timezone())
 		stop = timezone.make_aware(datetime.datetime.fromtimestamp(mktime_tz(parsedate_tz(requests.GET['to']))), timezone.get_current_timezone())
-		pages = Wordpress.objects.filter(published__range = [start, stop]).filter(level='page')
-		dump['page_count'] = len(pages)
+		site = requests.GET['site']
+
 		db_object = Wordpress.objects.filter(level='root')[0]
 		site_tree = {'url' : db_object.url, 'title' : db_object.title, 'subtitle' : db_object.subtitle, 'published' : db_object.published, 'level' : db_object.level, 'children' : []}
+
+		if site == 'all':
+			pages = Wordpress.objects.filter(published__range = [start, stop]).filter(level='page')
+		else:
+			pages = Wordpress.objects.filter(published__range = [start, stop]).filter(parent=site)
+
+		dump['page_count'] = len(pages)
+		
 		_sites = []
 		for page in pages:
 			if page.parent not in _sites:
 				_sites.append(page.parent)
+
+
 		sites = [Wordpress.objects.filter(url=site)[0] for site in _sites]
 		site_tree['children'] = [{'url' : site.url, 'title' : site.title, 'subtitle' : site.subtitle, 'published' : site.published, 'level' : site.level, 'children' : []} for site in sites]
 		dump['site_count'] = len(site_tree['children'])

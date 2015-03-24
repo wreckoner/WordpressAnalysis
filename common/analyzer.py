@@ -7,12 +7,11 @@ from operator import itemgetter
 class Analysis():
 	""" Analysis Class. """
 	def __init__(self, text):
-		self.stopwords = stopwords.stop_words
 		self.text = text
-		self.extract_words()
 		
 	def extract_words(self):
 		''' Extract words appearing in the text. '''
+		self.stopwords = stopwords.stop_words
 		temp = self.text.lower()
 		temp = re.sub(r'http.*? ', ' ', temp)
 		temp = re.sub(r'\b\d+\b', '', temp)
@@ -22,22 +21,40 @@ class Analysis():
 			self.word_list = filter(lambda x : x != word, self.word_list)
 		
 
-	def word_counter(self):
+	def _word_counter(self):
+		self.extract_words()
 		words = self.word_list
-		word_counts = dict(Counter(words).most_common(50))
+		word_counts = Counter(words).most_common(150)
 		word_bags = []
 		for word in word_counts:
 			flag = False
 			for bag in word_bags:
-				if bag['count'] == word_counts[word]:
-					bag['words'].append(word)
+				if bag['count'] == word[1]:
+					bag['words'].append(word[0])
 					flag = True
 					break
 			if not flag:
-				word_bags.append({'count' : word_counts[word], 'words' : [word]})
+				word_bags.append({'count' : word_counts[1], 'words' : [0]})
 		word_bags.sort(key=itemgetter('count'))
 		if len(word_bags) > 50:
 			word_bags = word_bags[-50:]
-		word_counts = [{'text' : item, 'count' : word_counts[item]} for item in word_counts]
+		word_counts = [{'text' : item[0], 'count' : item[1]} for item in word_counts]
 		word_counts.sort(key=lambda x:x['count'], reverse=True)
 		return word_counts, word_bags
+
+	def word_counter(self):
+		stopwords_pattern = re.compile(r'\b(' + r'|'.join(stopwords.stop_words) + r'|\d+|http.*?|www.*?)\b', re.I|re.U)
+		pattern = re.compile(r'\b[\w\-\']+\b', re.I | re.U)
+
+		text = stopwords_pattern.sub('', self.text)
+		words = pattern.findall(text.lower())
+		word_count = Counter(words).most_common(150)
+
+		word_bags = [{'count' : count, 'words' : []} for count in sorted(({}.fromkeys(zip(*word_count)[1])).keys())[-50:]]
+		for word in word_count:
+			for bag in word_bags:
+				if bag['count'] == word[1]:
+					bag['words'].append(word[0])
+
+		word_count = [{'text' : item[0], 'count' : item[1]} for item in word_count]
+		return word_count, word_bags
