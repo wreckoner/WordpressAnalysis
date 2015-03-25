@@ -13,3 +13,10 @@ class Wordpress(models.Model):
 	
 	def __repr__(self):
 		return self.title
+
+class SentimentWord(models.Model):
+	word = models.CharField(max_length=75, primary_key=True, unique=True)
+	score = models.IntegerField()
+
+	def __repr__(self):
+		return ' - '.join([word, str(score)])
