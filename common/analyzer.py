@@ -2,6 +2,7 @@
 import re, copy, stopwords, random, os
 from collections import Counter
 from operator import itemgetter
+from wordpress.models import SentimentWord
 
 
 class Analysis():
@@ -21,27 +22,6 @@ class Analysis():
 			self.word_list = filter(lambda x : x != word, self.word_list)
 		
 
-	def _word_counter(self):
-		self.extract_words()
-		words = self.word_list
-		word_counts = Counter(words).most_common(150)
-		word_bags = []
-		for word in word_counts:
-			flag = False
-			for bag in word_bags:
-				if bag['count'] == word[1]:
-					bag['words'].append(word[0])
-					flag = True
-					break
-			if not flag:
-				word_bags.append({'count' : word_counts[1], 'words' : [0]})
-		word_bags.sort(key=itemgetter('count'))
-		if len(word_bags) > 50:
-			word_bags = word_bags[-50:]
-		word_counts = [{'text' : item[0], 'count' : item[1]} for item in word_counts]
-		word_counts.sort(key=lambda x:x['count'], reverse=True)
-		return word_counts, word_bags
-
 	def word_counter(self):
 		stopwords_pattern = re.compile(r'\b(' + r'|'.join(stopwords.stop_words) + r'|\d+|http.*?|www.*?)\b', re.I|re.U)
 		pattern = re.compile(r'\b[\w\-\']+\b', re.I | re.U)
@@ -58,3 +38,6 @@ class Analysis():
 
 		word_count = [{'text' : item[0], 'count' : item[1]} for item in word_count]
 		return word_count, word_bags
+
+	def sentiment_analyzer(self):
+		sentiment_words = SentimentWord.objects.all()

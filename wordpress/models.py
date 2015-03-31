@@ -19,4 +19,4 @@ class SentimentWord(models.Model):
 	score = models.IntegerField()
 
 	def __repr__(self):
-		return ' - '.join([word, str(score)])
+		return ' - '.join([self.word, str(self.score)])

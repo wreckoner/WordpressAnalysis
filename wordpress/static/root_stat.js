@@ -147,7 +147,7 @@ function analyze () {
 		$("#trend-word-cloud").empty();
 		$("#trend-bar-graph").empty();
 		$("#trend-summary").empty();
-		$("#word-list")
+		$("#word-list").empty();
 		$.ajaxSetup({
 		    beforeSend:function(){
 		        $("#ajax-loader").show();
@@ -276,9 +276,4 @@ function bar_graph(data, container) {
       	for (var i = 0; i < d.words.length; i++) {
       	 	words.innerHTML += d.words[i] + ". ";
       	 }; });
-
-
-    d3.select("#site-trends").append("div")
-      .attr("id", "word-list")
-      .style("margin-top", "10px");
 }

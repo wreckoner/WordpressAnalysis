@@ -103,7 +103,8 @@ def api(requests):
 		# pprint.pprint(site_tree)
 		dump['site_tree'] = site_tree
 		text_dump = ' '.join([page.content for page in pages])
-		word_count, word_bags = Analysis(text_dump).word_counter()
+		analysis_obj = Analysis(text_dump)
+		word_count, word_bags = analysis_obj.word_counter()
 		dump['word_count'] = word_count
 		dump['word_bags'] = word_bags
 		#print word_count
