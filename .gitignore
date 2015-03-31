@@ -1,4 +1,5 @@
 tuftsbuzz/settings/local.py
+wordpress/migrations/*
 DS_Store
 db.sqlite3
 test.py
